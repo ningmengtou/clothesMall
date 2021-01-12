@@ -19,15 +19,15 @@ export default {};
 
 <style scoped>
   .nav-bar {
-    /* position: fixed;
+    position: fixed;
     top: 0;
-    left: 0; */
+    left: 0;
     display: flex;
     width: 100%;
     line-height: 44px;
     height: 44px;
-    /* margin-bottom: 44px; */
     text-align: center;
+    z-index: 10;
   } 
   .center {
     flex: 1;
