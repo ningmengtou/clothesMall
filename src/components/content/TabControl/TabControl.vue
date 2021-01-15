@@ -41,8 +41,7 @@ export default {
 <style scoped>
 .tab-control {
   display: flex;
-  position: sticky;
-  top: 44px;
+  width: 100%;
   height: 40px;
   line-height: 40px;
   text-align: center;

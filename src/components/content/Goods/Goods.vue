@@ -1,7 +1,8 @@
 <template>
   <div class="goods">
     <div class="goodsItem" v-for="item in goods">
-      <img :src="item.show.img" alt="">
+      <!-- load 方法用于监听图片是否加载成功 -->
+      <img :src="item.show.img" alt="" @load="imageLoad">
       <div class="title">{{item.title}}</div>
       <div class="detail">
         <span class="price">￥{{item.price}}</span>
@@ -19,6 +20,12 @@ export default {
       default() {
         return []
       }
+    }
+  },
+  methods:{
+    imageLoad() {
+      // 图片加载完后利用事件总线发送 itemImageLoad 事件
+      this.$bus.$emit('itemImageLoad')
     }
   }
 }
