@@ -58,6 +58,7 @@ import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/util";
 
 export default {
+  name:'Home',
   data() {
     return {
       banner: [],
@@ -72,6 +73,7 @@ export default {
       isBackTopShow: false,
       TabControlTop: 0,
       TabControlFixed: false,
+      scrollTop: 0,
     };
   },
   components: {
@@ -128,8 +130,8 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl1.currentIndex = index
-      this.$refs.tabControl2.currentIndex = index
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     // 回到顶部点击事件
     backClick() {
@@ -159,6 +161,13 @@ export default {
       return this.goods[this.currentType].list;
     },
   },
+  activated() {
+    this.$refs.scroll.scrollTo(0,this.scrollTop,0)
+    this.$refs.scroll.refresh()
+  },
+  deactivated() {
+    this.scrollTop = this.$refs.scroll.scroll.y;
+  },
 };
 </script>
 
@@ -166,7 +175,7 @@ export default {
 #home {
   /* padding-top: 44px; */
   position: relative;
-  height: 100vh;
+  height: calc(100vh - 50px);
 }
 .content {
   /* 要给可以滚动的元素设定高度 */
@@ -177,7 +186,7 @@ export default {
   overflow: hidden;
   position: absolute;
   top: 44px;
-  bottom: 49px;
+  bottom: 1px;
   left: 0;
   right: 0;
 }

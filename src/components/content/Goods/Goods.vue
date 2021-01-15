@@ -1,12 +1,12 @@
 <template>
   <div class="goods">
-    <div class="goodsItem" v-for="item in goods">
+    <div class="goodsItem" v-for="item in goods" @click="toDetail(item.iid)">
       <!-- load 方法用于监听图片是否加载成功 -->
-      <img :src="item.show.img" alt="" @load="imageLoad">
-      <div class="title">{{item.title}}</div>
+      <img :src="item.show.img" alt="" @load="imageLoad" />
+      <div class="title">{{ item.title }}</div>
       <div class="detail">
-        <span class="price">￥{{item.price}}</span>
-        <span class="collect">{{item.cfav}}</span>
+        <span class="price">￥{{ item.price }}</span>
+        <span class="collect">{{ item.cfav }}</span>
       </div>
     </div>
   </div>
@@ -14,21 +14,25 @@
 
 <script>
 export default {
-  props:{
-    goods:{
-      type:Array,
+  props: {
+    goods: {
+      type: Array,
       default() {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
-  methods:{
+  methods: {
     imageLoad() {
       // 图片加载完后利用事件总线发送 itemImageLoad 事件
-      this.$bus.$emit('itemImageLoad')
-    }
-  }
-}
+      this.$bus.$emit("itemImageLoad");
+    },
+    toDetail(iid) {
+      this.$router.push("/detail/"+iid);
+      
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -69,7 +73,7 @@ export default {
   position: relative;
 }
 .goodsItem .detail .collect::before {
-  content:'';
+  content: "";
   position: absolute;
   width: 22px;
   height: 22px;

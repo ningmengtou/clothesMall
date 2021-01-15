@@ -24,6 +24,7 @@ export default {};
   line-height: 44px;
   height: 44px;
   text-align: center;
+
 }
 .center {
   flex: 1;
