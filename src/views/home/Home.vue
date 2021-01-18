@@ -55,10 +55,12 @@ import HomeRecommend from "./childComps/HomeRecommend";
 import HomeFeatureView from "./childComps/HomeFeatureView";
 // 引入网络请求方法
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import { debounce } from "common/util";
+
+// 引入混入
+import { itemListenerMixin } from "common/mixin";
 
 export default {
-  name:'Home',
+  name: "Home",
   data() {
     return {
       banner: [],
@@ -76,6 +78,8 @@ export default {
       scrollTop: 0,
     };
   },
+  // mixins 定义混入的代码
+  mixins: [itemListenerMixin],
   components: {
     NavBar,
     TabControl,
@@ -92,14 +96,7 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh, 200);
-    // 利用事件总线来监听 itemImageLoad  需要在mounted钩子函数中才能拿到值
-    this.$bus.$on("itemImageLoad", () => {
-      // 图片加载完成后执行一次 refresh
-      refresh();
-    });
-  },
+  mounted() {},
   methods: {
     async getHomeMultidata() {
       const result = await getHomeMultidata();
@@ -162,11 +159,13 @@ export default {
     },
   },
   activated() {
-    this.$refs.scroll.scrollTo(0,this.scrollTop,0)
-    this.$refs.scroll.refresh()
+    this.$refs.scroll.scrollTo(0, this.scrollTop, 0);
+    this.$refs.scroll.refresh();
   },
   deactivated() {
     this.scrollTop = this.$refs.scroll.scroll.y;
+    // 不访问home页面时取消 $bus 中的 itemImageLoad 事件
+    this.$bus.$off("itemImageLoad", this.itemImageLoad);
   },
 };
 </script>

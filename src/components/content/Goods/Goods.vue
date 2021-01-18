@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="goodsItem" v-for="item in goods" @click="toDetail(item.iid)">
       <!-- load 方法用于监听图片是否加载成功 -->
-      <img :src="item.show.img" alt="" @load="imageLoad" />
+      <img :src="item.iid?item.show.img:item.image" alt="" @load="imageLoad" />
       <div class="title">{{ item.title }}</div>
       <div class="detail">
         <span class="price">￥{{ item.price }}</span>
@@ -29,7 +29,6 @@ export default {
     },
     toDetail(iid) {
       this.$router.push("/detail/"+iid);
-      
     },
   },
 };

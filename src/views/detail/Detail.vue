@@ -1,12 +1,17 @@
 <template>
   <div id="detail">
-      <DetailNavBar :title="title"></DetailNavBar>
-    <Scroll class="content">
+    <DetailNavBar :title="title" class="detail-nav"></DetailNavBar>
+    <Scroll class="content" ref="scroll">
       <DetailSwiper :banners="banners"></DetailSwiper>
       <DetailBaseInfo :goods="goods"></DetailBaseInfo>
       <DetailShopInfo :shop="shop"></DetailShopInfo>
-      <DetailGoodsInfo :detailInfo="detailInfo"></DetailGoodsInfo>
+      <DetailGoodsInfo
+        :detailInfo="detailInfo"
+        @imagesLoad="infoImagesLoad"
+      ></DetailGoodsInfo>
       <DetailParamInfo :paramInfo="paramInfo"></DetailParamInfo>
+      <DetailComment :comment="comment"></DetailComment>
+      <goods :goods="recommends"></goods>
     </Scroll>
   </div>
 </template>
@@ -19,10 +24,21 @@ import DetailBaseInfo from "./childComps/DetailBaseInfo";
 import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
+import DetailComment from "./childComps/DetailComment";
 
-import Scroll from 'components/common/Scroll/Scroll'
+import Scroll from "components/common/Scroll/Scroll";
+import goods from "components/content/Goods/Goods";
 
-import { getDetailData, Goods, Shop, GoodsParam } from "network/detail";
+import {
+  getDetailData,
+  Goods,
+  Shop,
+  GoodsParam,
+  getRecommendData,
+} from "network/detail";
+
+// 引入混入
+import { itemListenerMixin } from "common/mixin";
 
 export default {
   name: "Detail",
@@ -35,8 +51,12 @@ export default {
       shop: {},
       detailInfo: {},
       paramInfo: {},
+      recommends: [],
+      comment: {},
+ 
     };
   },
+  mixins:[itemListenerMixin],
   components: {
     DetailNavBar,
     DetailSwiper,
@@ -44,13 +64,20 @@ export default {
     DetailShopInfo,
     DetailGoodsInfo,
     DetailParamInfo,
+    DetailComment,
     Scroll,
+    goods,
   },
   created() {
     this.iid = this.$route.params.iid;
     this.getDetailData(this.iid);
+    this.getRecommendData();
+  },
+  mounted() {
+
   },
   methods: {
+    // 获取详情页数据
     async getDetailData(iid) {
       const res = await getDetailData(iid);
       console.log(res);
@@ -71,8 +98,23 @@ export default {
         res.result.itemParams.info,
         res.result.itemParams.rule
       );
+      // 获取评论信息
+      this.comment = res.result.rate.list[0];
+    },
+    infoImagesLoad() {
+      // 图片记载完就重新计算一下高度
+      this.$refs.scroll.refresh();
+    },
+    // 获取推荐页数据
+    async getRecommendData() {
+      const res = await getRecommendData();
+      this.recommends = res.data.list;
     },
   },
+  // 详情页没有缓存  所以是 destroyed 钩子函数
+  destroyed() {
+    this.$bus.$off('itemImageLoad',this.itemImageLoad)
+  }
 };
 </script>
 
@@ -83,8 +125,15 @@ export default {
   position: relative;
   z-index: 12;
   background-color: #fff;
+  height: 100vh;
 }
-.content {
-  height: calc(100vh -44px);
+#detail .content {
+  height: calc(100% - 44px);
+  overflow: hidden;
+}
+.detail-nav {
+  position: relative;
+  z-index: 9;
+  background-color: #fff;
 }
 </style>
