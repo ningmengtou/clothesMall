@@ -1,21 +1,24 @@
 <template>
-  <div class="comment" v-if="Object.keys(comment).length > 0">
-    <div class="title">
-      <span>用户评价</span>
-      <span>更多</span>
+  <div>
+    <div class="comment" v-if="Object.keys(comment).length > 0">
+      <div class="title">
+        <span>用户评价</span>
+        <span>更多</span>
+      </div>
+      <div class="userInfo">
+        <img :src="comment.user.avatar" alt="" />
+        <span>{{ comment.user.uname }}</span>
+      </div>
+      <div class="content">{{ comment.content }}</div>
+      <div class="commentDateil">
+        <span>{{ comment.created | timer }}</span>
+        <span>{{ comment.style }}</span>
+      </div>
+      <div class="imageShow" v-if="comment.images">
+        <img :src="item" alt="" v-for="item in comment.images" />
+      </div>
     </div>
-    <div class="userInfo">
-      <img :src="comment.user.avatar" alt="" />
-      <span>{{ comment.user.uname }}</span>
-    </div>
-    <div class="content">{{ comment.content }}</div>
-    <div class="commentDateil">
-      <span>{{ comment.created | timer }}</span>
-      <span>{{ comment.style }}</span>
-    </div>
-    <div class="imageShow" v-if="comment.images">
-      <img :src="item" alt="" v-for="item in comment.images" />
-    </div>
+    <div v-else class="noComment">暂无评论</div>
   </div>
 </template>
 
@@ -42,7 +45,8 @@ export default {
 </script>
 
 <style scoped>
-.comment {
+.comment,
+.noComment {
   padding: 15px;
   border-bottom: 3px solid rgb(236, 232, 232);
   margin-bottom: 15px;

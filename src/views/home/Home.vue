@@ -47,7 +47,6 @@ import NavBar from "components/common/NavBar/NavBar";
 import TabControl from "components/content/TabControl/TabControl";
 import Goods from "components/content/Goods/Goods";
 import Scroll from "components/common/Scroll/Scroll";
-import BackTop from "components/content/BackTop/BackTop";
 
 // 引入子级组件
 import HomeSwiper from "./childComps/HomeSwiper";
@@ -57,7 +56,7 @@ import HomeFeatureView from "./childComps/HomeFeatureView";
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
 // 引入混入
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -72,20 +71,18 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isBackTopShow: false,
       TabControlTop: 0,
       TabControlFixed: false,
       scrollTop: 0,
     };
   },
   // mixins 定义混入的代码
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   components: {
     NavBar,
     TabControl,
     Goods,
     Scroll,
-    BackTop,
     HomeSwiper,
     HomeRecommend,
     HomeFeatureView,
@@ -130,12 +127,6 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    // 回到顶部点击事件
-    backClick() {
-      // 通过 ref 拿到组件 Scroll 的实例对象调用其中的 scrollTo 方法回到顶部
-      this.$refs.scroll.scrollTo(0, 0);
-    },
-    // 监听滚动容器滚动事件
     onScroll(position) {
       // 根据滚动的距离来决定 BackTop 组件的显示隐藏
       this.isBackTopShow = -position.y > 1050;

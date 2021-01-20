@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     // 封装内部的scrollTo方法
-    scrollTo(x, y, time = 1500) {
+    scrollTo(x, y, time = 700) {
       this.scroll && this.scroll.scrollTo(x, y, time);
     },
     finishPullUp() {
