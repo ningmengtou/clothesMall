@@ -44,14 +44,12 @@ export default {
     // 获取标题信息数据
     async getCategoryTitle() {
       const res = await getCategoryTitle();
-      console.log(res);
       this.titleList = res.data.category.list;
       const res1 = this.getSubcategory(this.titleList[0].maitKey);
     },
     // 获取子类别数据
     async getSubcategory(maitKey) {
       const res = await getSubcategory(maitKey);
-      console.log(res);
       this.subcategoryList = res.data.list;
     },
     // 点击切换左侧title事件

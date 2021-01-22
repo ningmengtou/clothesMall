@@ -32,7 +32,6 @@ export default {
     imageLoad() {
       if (++this.imageNumber == this.subcategoryList.length) {
         this.$refs.Scroll.refresh();
-        console.log(11);
       }
     },
   },
